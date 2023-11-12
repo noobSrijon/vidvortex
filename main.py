@@ -35,117 +35,100 @@ def index():
 
 @app.route('/download', methods=['POST'])
 def download():
+  link = request.form['url'].replace("m.facebook.com", "facebook.com")
+  link = link.strip()
+  dic = {}
+  try:
+    ydl = youtube_dl.YoutubeDL({
+      'outtmpl': '%(title)s.%(ext)s',
+      'quiet': True,
+      'no_warnings': True
+    })
+    with ydl:
+      result = ydl.extract_info(str(link), download=False)
+    if 'entries' in result:
+      video = result['entries'][0]['formats']
+    else:
+      video = result
 
-  if "facebook" in request.form['url'] or "fb.com" in request.form['url']:
-    link = request.form['url'].replace("m.facebook.com", "facebook.com")
-    link = link.strip()
-    dic = {}
     try:
-      ydl = youtube_dl.YoutubeDL({
-        'outtmpl': '%(title)s.%(ext)s',
-        'quiet': True,
-        'no_warnings': True
-      })
-      with ydl:
-        result = ydl.extract_info(str(link), download=False)
-      if 'entries' in result:
-        video = result['entries'][0]['formats']
-      else:
-        video = result
+      timestamp = result['entries'][0]['timestamp']
+      date = datetime.fromtimestamp(timestamp)
+      uploadt = date.strftime("%d %B %Y, %I:%M:%S %p")
 
-      try:
-        timestamp = result['entries'][0]['timestamp']
-        date = datetime.fromtimestamp(timestamp)
-        uploadt = date.strftime("%d %B %Y, %I:%M:%S %p")
-
-      except Exception as e:
-
-        uploadt = "NA"
-        pass
-      try:
-        total_seconds = float(result['entries'][0]['duration'])
-
-        hours = int(total_seconds / 3600)
-        minutes = int((total_seconds % 3600) / 60)
-        seconds = int(total_seconds % 60)
-
-        time_components = []
-        if hours > 0:
-          time_components.append(f"{hours} hours")
-        if minutes > 0:
-          time_components.append(f"{minutes} minutes")
-        if seconds > 0:
-          time_components.append(f"{seconds} seconds")
-
-        duration = ", ".join(time_components)
-      except Exception as e:
-
-        duration = "NA"
-        pass
-
-      if 'entries' in result:
-        for i in video:
-          if i['format_id'] == "hd":
-            dic['HD'] = [i["ext"], str(i['url']) + "&dl=1"]
-          elif i['format_id'] == "sd":
-            dic['SD'] = [i["ext"], str(i['url']) + "&dl=1"]
-          elif i['ext'] == "m4a":
-            dic['AUDIO'] = [i["ext"], str(i['url']) + "&dl=1"]
-      else:
-        form = "Video"
-        if video['format_id'] == "0":
-          form = "SD"
-        elif video['format_id'] == "1":
-          form = "HD"
-
-        dic['url'] = [video['url'] + "&dl=1", form]
-
-      try:
-        x = links(link)
-        print(x)
-        head = x[0]
-      except:
-        x = ["videoplayback", "/viderror.gif"]
-        head = "videoplayback"
-
-      if len(x) == 2:
-        if len(x[0]) > 60:
-          head = head[:60] + "..."
-        return render_template('download.html',
-                              video_dict=dic,
-                              header=head,
-                              image=x[1],
-                              duration=duration,
-                              uploadt=uploadt)
-      else:
-        return render_template('download.html',
-                              video_dict=dic,
-                              header="videoplayback",
-                              image="/vid.jpg",
-                              duration=duration,
-                              uploadt=uploadt)
     except Exception as e:
-      lis = ['sorry', 'tired', 'sweat', 'confused', 'nervous', 'sigh']
-      x = requests.get("https://api.otakugifs.xyz/gif?reaction={}".format(
-        random.choice(lis)))
-      link = json.loads(x.text)['url']
 
-      return render_template('downloaderror.html', video_dict=dic, errl=link)
-  else:
-    yt = YouTube(request.form['url'])
+      uploadt = "NA"
+      pass
+    try:
+      total_seconds = float(result['entries'][0]['duration'])
 
-        # Getting the direct download URL of the video
-    video = yt.streams.get_highest_resolution()
-    vv = video.url
-    title=video.title
+      hours = int(total_seconds / 3600)
+      minutes = int((total_seconds % 3600) / 60)
+      seconds = int(total_seconds % 60)
 
-    return render_template('download.html',
-                              video_dict={'url':[vv],},
-                              header=title,
-                              image="/vid.jpg",
-                              duration="",
-                              uploadt="")
+      time_components = []
+      if hours > 0:
+        time_components.append(f"{hours} hours")
+      if minutes > 0:
+        time_components.append(f"{minutes} minutes")
+      if seconds > 0:
+        time_components.append(f"{seconds} seconds")
 
+      duration = ", ".join(time_components)
+    except Exception as e:
+
+      duration = "NA"
+      pass
+
+    if 'entries' in result:
+      for i in video:
+        if i['format_id'] == "hd":
+          dic['HD'] = [i["ext"], str(i['url']) + "&dl=1"]
+        elif i['format_id'] == "sd":
+          dic['SD'] = [i["ext"], str(i['url']) + "&dl=1"]
+        elif i['ext'] == "m4a":
+          dic['AUDIO'] = [i["ext"], str(i['url']) + "&dl=1"]
+    else:
+      form = "Video"
+      if video['format_id'] == "0":
+        form = "SD"
+      elif video['format_id'] == "1":
+        form = "HD"
+
+      dic['url'] = [video['url'] + "&dl=1", form]
+
+    try:
+      x = links(link)
+      print(x)
+      head = x[0]
+    except:
+      x = ["videoplayback", "/viderror.gif"]
+      head = "videoplayback"
+
+    if len(x) == 2:
+      if len(x[0]) > 60:
+        head = head[:60] + "..."
+      return render_template('download.html',
+                             video_dict=dic,
+                             header=head,
+                             image=x[1],
+                             duration=duration,
+                             uploadt=uploadt)
+    else:
+      return render_template('download.html',
+                             video_dict=dic,
+                             header="videoplayback",
+                             image="/vid.jpg",
+                             duration=duration,
+                             uploadt=uploadt)
+  except Exception as e:
+    lis = ['sorry', 'tired', 'sweat', 'confused', 'nervous', 'sigh']
+    x = requests.get("https://api.otakugifs.xyz/gif?reaction={}".format(
+      random.choice(lis)))
+    link = json.loads(x.text)['url']
+
+    return render_template('downloaderror.html', video_dict=dic, errl=link)
 
 
 @app.route('/udvash')
