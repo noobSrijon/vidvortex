@@ -4,3 +4,4 @@ pytube==15.0.0
 youtube-dl==2021.12.17
 gunicorn==21.2.0
 requests==2.31.0
+urllib3==1.26.6
