@@ -1,4 +1,4 @@
 beautifulsoup4==4.12.2
-Flask==3.0.0
+Flask==2.2.5
 pytube==15.0.0
 youtube-dl==2021.12.17
