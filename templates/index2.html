@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Video Downloader</title>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+	<header>
+		<div class="container">
+			<h1>Video Downloader</h1>
+		</div>
+	</header>
+	<main>
+		<center><h1>Download Videos from Popular Sites</h1></center>
+		<section class="container">
+			
+			<form>
+				<div class="form-input">
+					<input type="text" placeholder="Paste video URL here">
+				</div>
+				<center><button class="button" type="submit">Download</button></center>
+			</form>
+		</section>
+		<section class="container">
+			<center><h1>Supported Websites</h1></center>
+			<div class="card">
+				
+				<div class="logo">
+					<a href="#"><img src="https://logo.clearbit.com/youtube.com" alt="YouTube Logo"></a>
+				</div>
+				<div class="logo">
+					<a href="#"><img src="https://logo.clearbit.com/vimeo.com" alt="Vimeo Logo"></a>
+				</div>
+				<div class="logo">
+					<a href="#"><img src="https://logo.clearbit.com/dailymotion.com" alt="Dailymotion Logo"></a>
+				</div>
+				<div class="logo">
+					<a href="#"><img src="https://logo.clearbit.com/facebook.com" alt="Facebook Logo"></a>
+				</div>
+			</div>
+		</section>
+	</main>
+	<footer>
+		<div class="container">
+			<p>&copy; 2023 Video Downloader. All rights reserved.</p>
+		</div>
+	</footer>
+</body>
+</html>
