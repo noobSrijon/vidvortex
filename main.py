@@ -154,7 +154,7 @@ def udvasdown():
   for h4_tag in h4_tags:
     title = h4_tag.text
   if len(vv)<=0:
-    pattern = r"let videoId = '([^']*)';"
+    pattern = r'data-youtube-video="([^"]+)"'
 
     # Search for the videoId using the regular expression
     match = re.search(pattern, text)
@@ -172,10 +172,14 @@ def udvasdown():
     else:
         vv=""
         print("Video ID not found in the JavaScript code.")
+  card_title = soup.find('h5', class_='card-title').text.strip()
+  start_time = soup.find('span', class_='start-time').text.strip()
+  end_time = soup.find('span', class_='end-time').text.strip()
 
   return render_template('udvashins.html',
                          link=vv,
-                         title=title,
+                         start_time=start_time ,
+                         title=card_title,
                          filename=title.replace(" ", "_"))
 
 
@@ -209,6 +213,6 @@ def download_file():
   else:
     return "The 'fileUrl' parameter is not provided."
 
-#hh
+
 if __name__ == '__main__':
-  app.run(host="0.0.0.0",port="3000")
+  app.run(host="0.0.0.0")
